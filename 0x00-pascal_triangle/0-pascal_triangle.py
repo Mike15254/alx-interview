@@ -20,7 +20,7 @@ def pascal_triangle(n):
                 tmp_psc.append(1)
             else:
                 tmp_psc.append(
-                  psc[current_pos - 2][i] + psc[current_pos - 2][i - 1]
+                    psc[current_pos - 2][i] + psc[current_pos - 2][i - 1]
                 )
         psc.append(tmp_psc)
         current_pos += 1

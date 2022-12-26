@@ -25,4 +25,3 @@ def pascal_triangle(n):
         psc.append(tmp_psc)
         current_pos += 1
     return psc
-    

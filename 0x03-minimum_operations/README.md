@@ -1,1 +1,0 @@
-# Mininmum Operations

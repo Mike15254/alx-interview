@@ -32,3 +32,5 @@ def island_perimeter(grid):
                 if row < len(grid) - 1 and grid[row + 1][col]:
                     connections += 1
     return squares * 4 - 2 * connections
+
+ 

@@ -1,49 +1,70 @@
-def is_prime(n):
-    if n < 2:
-        return False
-    for i in range(2, int(n ** 0.5) + 1):
-        if n % i == 0:
-            return False
-    return True
-
-
-def generate_primes(limit):
-    # This function generates the first prime number less than or equal to a given limit
-    for n in range(limit, 1, -1):
-        if is_prime(n):
-            return n
-    return None
-
-
-def get_winner(n, player, dp):
-    # This function determines the winner for a given state of the game
-    if (tuple(range(1, n+1)), player) in dp:
-        return dp[(tuple(range(1, n+1)), player)]
-    if player == 'Maria':
-        p = generate_primes(n)
-        if p is not None and get_winner(n-p, 'Ben', dp) == 'Maria':
-            dp[(tuple(range(1, n+1)), player)] = 'Maria'
-            return 'Maria'
-        dp[(tuple(range(1, n+1)), player)] = 'Ben'
-        return 'Ben'
-    else:
-        p = generate_primes(n)
-        if p is not None and get_winner(n-p, 'Maria', dp) == 'Ben':
-            dp[(tuple(range(1, n+1)), player)] = 'Ben'
-            return 'Ben'
-        dp[(tuple(range(1, n+1)), player)] = 'Maria'
-        return 'Maria'
+#!/usr/bin/python3
+'''
+contains prime game solution
+'''
 
 
 def isWinner(x, nums):
-    winners = {'Maria': 0, 'Ben': 0}
-    for n in nums:
-        dp = {}
-        winner = get_winner(n, 'Maria', dp)
-        winners[winner] += 1
-    if winners['Maria'] > winners['Ben']:
-        return 'Maria'
-    elif winners['Ben'] > winners['Maria']:
+    '''
+    Returns the name of the winner
+    '''
+    if len(nums) == 0:
         return 'Ben'
-    else:
-        return None
+    wins = {'Maria': 0, 'Ben': 0}
+    for i in range(x):
+        winner = play(nums[i])
+        wins[winner] += 1
+    if wins['Ben'] > wins['Maria']:
+        return 'Ben'
+    return 'Maria'
+
+
+def play(n):
+    '''Maria and Ben take turns choosing numbers
+    Return:
+        winner of current round
+    '''
+    current = None
+    nums = [x for x in range(1, n+1)]
+    i = 0
+    while i < len(nums):
+        num = nums[i]
+        if isPrime(num):
+            if current is None or current == 'Ben':
+                current = 'Maria'
+            else:
+                current = 'Ben'
+            j = 0
+            while j < len(nums):
+                if nums[j] % num == 0:
+                    nums.pop(j)
+                else:
+                    j += 1
+        else:
+            i += 1
+    # Maria goes first, therefore she never got the chance to choose
+    # a prime number making Ben the winner
+    if current is None:
+        current = 'Ben'
+    return current
+
+
+def isPrime(n):
+    '''checks whether a given number is a prime number'''
+    if n == 1 or n == 0:
+        return False
+    if n == 2 or n == 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+
+    i = 5
+    w = 2
+
+    while i * i <= n:
+        if n % i == 0:
+            return False
+        i += w
+        w = 6 - w
+
+    return True
